@@ -1,114 +1,150 @@
 .MMM-MVVWiesty .module-content {
-  width: 100%;
-  margin: 0 auto;
+  margin: 0;
   overflow: visible;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .mvv-table-wrapper {
-  width: 100%;
+  width: auto;
+  max-width: 100%;
   overflow: visible;
 }
 
 .mvv-table {
-  width: 100%;
+  width: auto;
   table-layout: auto;
-  border-collapse: collapse !important;
-  font-size: 1em;
-  line-height: 1.2em;
+  border-collapse: collapse;
+  font-size: inherit;
+  line-height: 1.4;
+}
+
+.mvv-table td {
+  padding: 0.15em 0.4em;
+  vertical-align: middle;
   box-sizing: border-box;
 }
 
-.notification-cell {
-  width: 100% !important;
-  overflow: hidden;
+.icon-cell {
+  width: 1%;
+  padding-right: 0.5em;
+  padding-left: 0;
+  text-align: left;
+  white-space: nowrap;
 }
 
 .productsvg {
-  height: 0.9em;
+  height: 1em;
   width: auto;
   display: block;
-}
-
-.icon-cell {
-  width: 32px;
-  min-width: 32px;
-  padding: 4px 8px 4px 0;
-  text-align: left;
+  vertical-align: middle;
 }
 
 .line-cell {
-  width: 50px;
-  min-width: 50px;
-  padding: 4px 8px;
+  width: 1%;
+  padding-right: 0.6em;
   text-align: left;
   white-space: nowrap;
+  font-weight: bold;
 }
 
 .direction-cell {
-  width: auto;
-  min-width: 150px;
-  padding: 4px 12px;
+  padding-right: 1em;
   white-space: nowrap;
-  overflow: hidden;
+  overflow: visible;
   text-overflow: ellipsis;
   max-width: 250px;
+  min-width: 80px;
 }
 
 .time-cell {
-  width: 60px;
-  min-width: 60px;
-  padding: 4px 8px;
+  width: 1%;
+  padding-right: 0.5em;
   text-align: right;
   white-space: nowrap;
+  font-weight: 500;
 }
 
 .until-cell {
-  width: 90px;
-  min-width: 90px;
-  padding: 4px 0 4px 8px;
+  width: 1%;
+  padding-left: 0.5em;
+  padding-right: 0;
   text-align: right;
   white-space: nowrap;
+  opacity: 0.8;
+  font-size: 0.9em;
 }
 
-.mvv-table tr.departure-row, .mvv-table .notification-cell {
-  border-bottom: 1px solid #474747;
+.notification-cell {
+  padding: 0.4em 0;
+  max-width: 25vw !important;
+  overflow: visible;
 }
 
-.mvv-table tr.departure-row:nth-child(2n) {
-  background-color: rgba(255, 255, 255, 0.05);
+.mvv-table tr.departure-row {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mvv-table tr.departure-row:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.01);
 }
 
 .mvv-table tr:last-child {
   border-bottom: none;
 }
 
-.mvv-table td {
-  text-align: left;
-  box-sizing: border-box;
-}
-
-
 .scroll-container {
-  overflow: hidden;
+  overflow: visible;
   white-space: nowrap;
   width: 100%;
   position: relative;
-  mask-image: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgb(0, 0, 0) 12.5%, rgb(0, 0, 0) 87.5%, rgba(0, 0, 0, 0) 100%);
+  padding: 0.2em 0;
+  mask-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0) 0%,
+    rgb(0, 0, 0) 8%,
+    rgb(0, 0, 0) 92%,
+    rgba(0, 0, 0, 0) 100%
+  );
 }
 
 .scroll-text {
   display: inline-block;
-  transform: translateX(100%);
+  padding-left: 100%;
   animation: scroll-animation linear infinite;
-  box-sizing: border-box;
   white-space: nowrap;
+  font-size: 0.85em;
+  opacity: 0.9;
 }
 
 @keyframes scroll-animation {
   from {
-    transform: translateX(100%);
+    transform: translateX(0);
   }
   to {
     transform: translateX(-100%);
   }
+}
+
+.top.center .MMM-MVVWiesty,
+.upper.third .MMM-MVVWiesty,
+.middle.center .MMM-MVVWiesty,
+.lower.third .MMM-MVVWiesty,
+.bottom.center .MMM-MVVWiesty,
+.bottom.bar .MMM-MVVWiesty {
+  width: fit-content !important;
+  max-width: 25vw !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.top.center .MMM-MVVWiesty .direction-cell,
+.upper.third .MMM-MVVWiesty .direction-cell,
+.middle.center .MMM-MVVWiesty .direction-cell,
+.lower.third .MMM-MVVWiesty .direction-cell,
+.bottom.center .MMM-MVVWiesty .direction-cell,
+.bottom.bar .MMM-MVVWiesty .direction-cell {
+  max-width: 150px !important;
 }
