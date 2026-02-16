@@ -23,7 +23,8 @@ Module.register("MMM-MVVWiesty", {
     },
 
     getHeader () {
-        return this.config.header && (this.config.header !== "") ? this.config.header : "MVV Abfahrtsmonitor";
+        // if global header is set, use it, otherwise use default header
+        return this.data.header || this.config.header || "MVV Abfahrtsmonitor";
     },
 
     getDom () {
@@ -144,7 +145,7 @@ Module.register("MMM-MVVWiesty", {
 
     getLineIcon (lineName) {
         switch (lineName) {
-            case "Bus": case "MetroBus": case "MVV-Regionalbus": case "RegionalBus": case "ExpressBus": case "NachtBus":
+            case "Bus": case "MetroBus": case "MVV-Regionalbus": case "RegionalBus": case "ExpressBus": case "NachtBus": case "StadtBus":
                 return this.file("assets/bus.svg");
             case "S-Bahn":
                 return this.file("assets/sbahn.svg");
@@ -170,17 +171,22 @@ Module.register("MMM-MVVWiesty", {
         const self = this;
         const stopId = this.config.stopId.replace(/:/g, "%3A");
         const url = `https://www.mvv-muenchen.de/?eID=departuresFinder&action=get_departures&stop_id=${stopId}&requested_timestamp=${Math.floor(Date.now() / 1000)}&lines=`;
+        Log.info(`[MMM-MVVWiesty]: Fetching departures from URL: ${url}`);
         try {
             const response = await fetch(url);
             if (response.ok) {
                 const data = await response.json();
                 if (data && data.departures && data.departures.length > 0) {
+                    Log.info(`[MMM-MVVWiesty]: Fetched ${data.departures.length} departures from API.`);
                     self.departures = self.filterDepartures(data.departures);
                     self.departures.sort((a, b) =>
                         new Date(`1970-01-01T${a.departureLive}:00Z`) - new Date(`1970-01-01T${b.departureLive}:00Z`)
                     );
                     self.updateFilteredDepartures();
                     self.updateDom();
+                    Log.info(`[MMM-MVVWiesty]: Filtered, we have ${self.departures.length} departures to present`);
+                } else {
+                    Log.error("[MMM-MVVWiesty]: No departures found in response.");
                 }
             } else {
                 Log.error("[MMM-MVVWiesty]: Failed to load departures or no departures found.");
@@ -201,8 +207,19 @@ Module.register("MMM-MVVWiesty", {
 
             if (filterKeys.length === 0 || self.config.filter.hasOwnProperty("all")) return true;
 
+            // At this stage we do have filters, so let's check them:
+            // 1) check line number
+            // 2) check direction of given line number
             const lineFilter = self.config.filter[departure.line.number];
-            if (!lineFilter) return false;
+
+            if (lineFilter === undefined) {
+                // Filter for line number is not defined, so we skip this departure
+                return false;
+            }
+            if (!lineFilter) {
+                // Filter for line number found, but is empty, no directions defined, so we include all departures of this line
+                return true;
+            }
 
             if (Array.isArray(lineFilter)) {
                 return lineFilter.includes(departure.direction);
